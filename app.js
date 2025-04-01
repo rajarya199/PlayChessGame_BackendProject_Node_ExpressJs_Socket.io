@@ -24,28 +24,31 @@ app.get("/",function(req,res){
 
 io.on("connection",function(uniquesocket){
     console.log("connected")
+    if(!players.white){
+        players.white=uniquesocket.id //assign white player to the socket id
+        uniquesocket.emit("playerRole","w") //send 
+    }
+    else if(!players.black){
+        players.black=uniquesocket.id //assign black player to the socket id
+        uniquesocket.emit("playerRole","b") 
+    } else{
+        uniquesocket.emit("spectatorRole")
+    }
+
+    uniquesocket.on("disconnect",function(){
+        if(uniquesocket.id===players.white){
+            delete players.white //delete white player from players object
+        }else if(uniquesocket.id===players.black){
+            delete players.black 
+    
+        }
+    })
 });
 
 
-if(!players.white){
-    players.white=uniquesocket.id //assign white player to the socket id
-    uniquesocket.emit("playerRole","w") //send 
-}
-else if(!players.black){
-    players.black=uniquesocket.id //assign black player to the socket id
-    uniquesocket.emit("playerRole","b") 
-} else{
-    uniquesocket.emit("spectatorRole")
-}
 
-socket.on("disconnect",function(){
-    if(uniquesocket.id===players.white){
-        delete players.white //delete white player from players object
-    }else if(uniquesocket.id===players.black){
-        delete players.black 
 
-    }
-})
+
 
     server.listen(3000,function(){
     console.log("Server is running on port 3000")
