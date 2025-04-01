@@ -22,7 +22,12 @@ app.get("/",function(req,res){
     res.render("index",{title:"Play Chess"}) //render index.ejs file
     })
 
+
+
 io.on("connection",function(uniquesocket){
+
+    //io-send to all users
+//uniquesocket-send to a specific user
     console.log("connected")
     if(!players.white){
         players.white=uniquesocket.id //assign white player to the socket id
@@ -43,6 +48,30 @@ io.on("connection",function(uniquesocket){
     
         }
     })
+uniquesocket.on("move",(move)=>{
+
+    try{
+        //if not your turn,return
+        if(chess.turn()==='w' && uniquesocket.id !== players.white)return;
+        if(chess.turn()==='b' && uniquesocket.id !== players.black)return;
+
+        const result =chess.move(move)
+        //if correct move 
+        if(result){
+            currentPlayer=chess.turn() //set current player to the turn of the chess.js
+            io.emit("move",move) 
+            io.emit("boardState",chess.fen()) //send the board state to all players
+        } else{
+console.log("invalid move",move);
+            uniquesocket.emit("invalidMove:",move) //send invalid move to the player who made the move
+        }
+    }
+    catch(err){
+        console.log(err)
+        uniquesocket.emit("invalidMove:",move) ;
+    }
+})
+
 });
 
 
