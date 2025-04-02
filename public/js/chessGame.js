@@ -25,7 +25,7 @@ const renderBoard = () => {
         pieceElement.classList.add("piece",
             square.color==="w" ?"white":"black"
         );
-        pieceElement.innerHTML=""
+        pieceElement.innerText=getPieceUnicode(square)
         pieceElement.draggable=playerRole===square.color//only the player can move his pieces
         pieceElement.addEventListener("dragstart",(e)=>{
             //drag  which piece, from where
@@ -63,8 +63,19 @@ const renderBoard = () => {
     });
   });
 };
-renderBoard();
 const handleMove = () => {};
 
 // how pices are showm
-const getPieceUnicode = () => {};
+const getPieceUnicode = (piece) => {
+  const unicodePieces = {
+    k: "♔", q: "♕", r: "♖", b: "♗", n: "♘", p: "♙", // White Pieces (lowercase)
+    K: "♚", Q: "♛", R: "♜", B: "♝", N: "♞", P: "♟"  // Black Pieces (uppercase)
+  };
+
+  return unicodePieces[piece.type] || "";
+};
+
+
+
+
+renderBoard();
