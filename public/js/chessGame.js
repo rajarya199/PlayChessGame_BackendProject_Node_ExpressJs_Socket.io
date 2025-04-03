@@ -63,7 +63,16 @@ const renderBoard = () => {
     });
   });
 };
-const handleMove = () => {};
+const handleMove = (source,target) => {
+  constmove={
+    //chess coln-a,b,c,d,e,f.....
+    //chess row 8,7,6,5....
+    // 97 -ascii-a
+    from:`${String.fromCharCode(97+source.col)}${8-source.row}` ,
+    to:`${String.fromCharCode(97+target.col)}${8-target.row}` ,
+    promotion:q, //bydefault give life/promotion to queen when pawn finish coln
+  }
+};
 
 // how pices are showm
 const getPieceUnicode = (piece) => {
