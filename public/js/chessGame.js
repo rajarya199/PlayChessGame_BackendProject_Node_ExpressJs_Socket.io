@@ -31,7 +31,7 @@ const renderBoard = () => {
             //drag  which piece, from where
             if(pieceElement.draggable){
                 draggedPiece=pieceElement
-                squareSource={row:rowIndex,col:squareIndex};
+                sourceSquare={row:rowIndex,col:squareIndex};
                 e.dataTransfer.setData("text/plain","")
             }
         });
@@ -62,16 +62,23 @@ const renderBoard = () => {
 
     });
   });
+  if(playerRole==="b"){
+    boardElement.classList.add('flipped');
+  }
+  else{
+    boardElement.classList.remove("flipped")
+  }
 };
 const handleMove = (source,target) => {
-  constmove={
+  const move={
     //chess coln-a,b,c,d,e,f.....
     //chess row 8,7,6,5....
     // 97 -ascii-a
     from:`${String.fromCharCode(97+source.col)}${8-source.row}` ,
     to:`${String.fromCharCode(97+target.col)}${8-target.row}` ,
-    promotion:q, //bydefault give life/promotion to queen when pawn finish coln
+    promotion:"q", //bydefault give life/promotion to queen when pawn finish coln
   }
+  socket.emit("move",move) // send move to server
 };
 
 // how pices are showm
@@ -84,7 +91,26 @@ const getPieceUnicode = (piece) => {
   return unicodePieces[piece.type] || "";
 };
 
+socket.on("playerRole",function(role){
+  playerRole=role;
+  renderBoard()
+})
 
+socket.on("spectatorRole",function(){
+  playerRole=null;
+  renderBoard()
+})
+
+//FEN is a standard notation used to represent a chess position.
+socket.on("boardState",function(fen){
+  chess.load(fen)
+  renderBoard()
+});
+
+socket.on("move",function(move){
+  chess.move(move)
+  renderBoard()
+})
 
 
 renderBoard();
