@@ -6,6 +6,29 @@ let draggedPiece = null; //which piece
 let sourceSquare = null; //from where
 let playerRole = null;
 
+// highlighting legal moves
+const highlightLegalMoves = (square) => {
+  //get all valid moves
+  const legalMoves = chess.moves({ square, verbose: true });
+
+  // Remove previous highlights
+  document.querySelectorAll(".square").forEach(sq => sq.classList.remove("highlight"));
+
+  // Highlight legal moves
+  legalMoves.forEach(move => {
+      const col = move.to.charCodeAt(0) - 97; // Convert 'a' to 0, 'b' to 1, etc.
+      const row = 8 - parseInt(move.to[1]); // Convert '8' to 0, '7' to 1, etc.
+
+           // find the <div> matching the row and column.
+      const targetSquare = document.querySelector(`[data-row='${row}'][data-col='${col}']`);
+
+      if (targetSquare) {
+          targetSquare.classList.add("highlight");
+      }
+  });
+};
+
+
 const renderBoard = () => {
   const board = chess.board();
   boardElement.innerHTML = ""; //clear the board
@@ -33,8 +56,16 @@ const renderBoard = () => {
                 draggedPiece=pieceElement
                 sourceSquare={row:rowIndex,col:squareIndex};
                 e.dataTransfer.setData("text/plain","")
+                highlightLegalMoves(`${String.fromCharCode(97 + squareIndex)}${8 - rowIndex}`);
+
             }
         });
+
+        pieceElement.addEventListener("click", () => {
+          if (pieceElement.draggable) {
+              highlightLegalMoves(`${String.fromCharCode(97 + squareIndex)}${8 - rowIndex}`);
+          }
+      });
         pieceElement.addEventListener("dragend",(e)=>{
             draggedPiece=null
             squareSource=null
@@ -56,6 +87,8 @@ const renderBoard = () => {
             col:parseInt(squareElement.dataset.col)
           };
           handleMove(sourceSquare,targetSource)
+          document.querySelectorAll(".square").forEach(sq => sq.classList.remove("highlight"));
+
         };
        })
        boardElement.appendChild(squareElement)
