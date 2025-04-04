@@ -68,7 +68,7 @@ io.on("connection", function (uniquesocket) {
             gameOver = false; // Reset game over state
             io.emit("boardState", chess.fen());
           }, 5000);
-        } else if(chess.isStalemate() ||chess.isDraw() ||chess.isInsufficientMaterial()|| chess.isThreefoldRepetition() || chess.isDrawByFiftyMoves){
+        } else if(chess.isStalemate()  ||chess.isInsufficientMaterial()|| chess.isThreefoldRepetition() || chess.isDrawByFiftyMoves()){
           io.emit("gameOver", { winner: "Draw" });
           setTimeout(() => {
             chess.reset();
@@ -81,11 +81,11 @@ io.on("connection", function (uniquesocket) {
 
       } else {
         console.log("invalid move", move);
-        uniquesocket.emit("invalidMove:", move); //send invalid move to the player who made the move
+        uniquesocket.emit("invalidMove", move); //send invalid move to the player who made the move
       }
     } catch (err) {
       console.log(err);
-      uniquesocket.emit("invalidMove:", move);
+      uniquesocket.emit("invalidMove", move);
     }
   });
 });

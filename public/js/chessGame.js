@@ -166,5 +166,10 @@ if (winner === "Draw") {
   }, 5000);
 })
 
+socket.on("invalidMove", (move) => {
+  messageElement.innerText = "Invalid move!";
+  setTimeout(() => messageElement.innerText = "", 2000);
+});
+
 renderBoard();
  
