@@ -1,6 +1,7 @@
 const socket = io();
 const chess = new Chess();
 const boardElement = document.querySelector(".chessboard");
+const messageElement = document.getElementById("game-message");
 
 let draggedPiece = null; //which piece
 let sourceSquare = null; //from where
@@ -146,4 +147,12 @@ socket.on("move",function(move){
 })
 
 
+socket.on("gameOver",({winner})=>{
+  messageElement.innerText = `Checkmate!! ${winner} wins!`;
+  setTimeout(() => {
+    messageElement.innerText = "";
+  }, 5000);
+})
+
 renderBoard();
+ 
