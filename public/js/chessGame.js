@@ -156,7 +156,11 @@ socket.on("move",function(move){
 
 socket.on("gameOver",({winner})=>{
 gameOver=true
+if (winner === "Draw") {
+  messageElement.innerText = "Game Drawn!";
+} else {
   messageElement.innerText = `Checkmate!! ${winner} wins!`;
+}
   setTimeout(() => {
     messageElement.innerText = "";
   }, 5000);
