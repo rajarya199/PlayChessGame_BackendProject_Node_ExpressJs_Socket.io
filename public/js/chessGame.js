@@ -6,9 +6,11 @@ const messageElement = document.getElementById("game-message");
 let draggedPiece = null; //which piece
 let sourceSquare = null; //from where
 let playerRole = null;
+let gameOver=false;
 
 // highlighting legal moves
 const highlightLegalMoves = (square) => {
+  if(gameOver) return // Prevent moves after checkmate
   //get all valid moves
   const legalMoves = chess.moves({ square, verbose: true });
 
@@ -68,8 +70,11 @@ const renderBoard = () => {
           }
       });
         pieceElement.addEventListener("dragend",(e)=>{
+
             draggedPiece=null
             squareSource=null
+            document.querySelectorAll(".square").forEach(sq => sq.classList.remove("highlight"));
+            // Remove highlights after dragging
         });
 
         squareElement.appendChild(pieceElement);
@@ -104,6 +109,8 @@ const renderBoard = () => {
   }
 };
 const handleMove = (source,target) => {
+  if (gameOver) return;
+
   const move={
     //chess coln-a,b,c,d,e,f.....
     //chess row 8,7,6,5....
@@ -148,6 +155,7 @@ socket.on("move",function(move){
 
 
 socket.on("gameOver",({winner})=>{
+gameOver=true
   messageElement.innerText = `Checkmate!! ${winner} wins!`;
   setTimeout(() => {
     messageElement.innerText = "";

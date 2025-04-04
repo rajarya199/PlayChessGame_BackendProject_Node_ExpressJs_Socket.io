@@ -17,6 +17,7 @@ app.use(express.static(path.join(__dirname, "public"))); //set static folder to 
 const chess = new Chess();
 let players = {};
 let currentPlayer = "w";
+let gameOver = false; // Prevents moves after checkmate
 
 app.get("/", function (req, res) {
   res.render("index", { title: "Play Chess" }); //render index.ejs file
@@ -45,6 +46,8 @@ io.on("connection", function (uniquesocket) {
   });
   uniquesocket.on("move", (move) => {
     try {
+      if (gameOver) return; // Prevent moves after checkmate
+
       //if not your turn,return
       if (chess.turn() === "w" && uniquesocket.id !== players.white) return;
       if (chess.turn() === "b" && uniquesocket.id !== players.black) return;
@@ -62,6 +65,7 @@ io.on("connection", function (uniquesocket) {
 
           setTimeout(() => {
             chess.reset();
+            gameOver = false; // Reset game over state
             io.emit("boardState", chess.fen());
           }, 5000);
         }
