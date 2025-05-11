@@ -1,1 +1,3 @@
 #  Chess Game Backend Project using Node Js, Express js,Socket.io ,Chess
+## 🌟 Overview
+The **Chess Game** is a Backend project web  built with **Nodet.js** ,**Express Js**,**Socket.io**, and **JavaScript**, where two user can play chess game as opponents and while other acts as spectator. 
