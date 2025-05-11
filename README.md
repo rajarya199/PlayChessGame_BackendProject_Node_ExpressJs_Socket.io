@@ -10,3 +10,6 @@ The **Chess Game** is a Backend project web  built with **Nodet.js** ,**Express 
  **Js**
  **Socket.io**
  **Ejs**
+
+## 📧 Contact
+For inquiries, reach out to 📩 `aryalrajan078@gmail.com` or open an **issue** in the repository.
