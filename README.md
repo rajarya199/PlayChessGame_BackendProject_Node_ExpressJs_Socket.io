@@ -6,7 +6,7 @@ The **Chess Game** is a Backend project web  built with **Nodet.js** ,**Express 
 |Tech Stack|
 |------|
  **Node.Js**
- **Express Js**
+ **Express.Js**
  **Js**
  **Socket.io**
  **Ejs**
